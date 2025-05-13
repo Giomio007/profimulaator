@@ -93,7 +93,7 @@ ${questionsAndAnswers
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          model: "deepseek-ai/DeepSeek-R1",
+          model: "meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8",
           messages: [
             {
               role: "system",
@@ -106,7 +106,6 @@ ${questionsAndAnswers
             },
           ],
           temperature: 0.3,
-          max_tokens: 1500,
           response_format: { type: "json_object" },
         }),
       }
@@ -149,6 +148,11 @@ ${questionsAndAnswers
       const recommendationsText = Array.isArray(parsedResult.recommendations)
         ? parsedResult.recommendations.join("\n")
         : parsedResult.recommendations;
+
+      // Преобразование details из массива в строку, если необходимо
+      const detailsText = Array.isArray(parsedResult.details)
+        ? parsedResult.details.join("\n\n")
+        : parsedResult.details;
 
       // Преобразуем вопросы в формат для сохранения в БД
       const questionsForDb = questions.map((q) => {
@@ -209,7 +213,7 @@ ${questionsAndAnswers
             score: parsedResult.score,
             summary: parsedResult.summary,
             recommendations: recommendationsText,
-            details: parsedResult.details,
+            details: detailsText,
           },
         });
 
@@ -218,7 +222,7 @@ ${questionsAndAnswers
           score: parsedResult.score,
           summary: parsedResult.summary,
           recommendations: recommendationsText,
-          details: parsedResult.details,
+          details: detailsText,
           vacancyDetails: targetQuiz.vacancyDetails,
         };
       }
@@ -235,7 +239,7 @@ ${questionsAndAnswers
           score: parsedResult.score,
           summary: parsedResult.summary,
           recommendations: recommendationsText,
-          details: parsedResult.details,
+          details: detailsText,
           user: {
             connect: {
               id: userId,
@@ -249,7 +253,7 @@ ${questionsAndAnswers
         score: parsedResult.score,
         summary: parsedResult.summary,
         recommendations: recommendationsText,
-        details: parsedResult.details,
+        details: detailsText,
         vacancyDetails: vacancyDetails,
       };
     } catch (error) {
